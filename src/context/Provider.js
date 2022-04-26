@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Context from './Context';
-import getInfoPlanes from '../api/getInfoPlanets';
+import { apiWithoutResidents } from '../api/getInfoPlanets';
 
 function Provider({ children }) {
   const [data, setData] = useState();
 
   useEffect(() => {
-    getInfoPlanes().then((json) => setData(json));
+    apiWithoutResidents().then((json) => setData(json));
   }, []);
 
   return (
