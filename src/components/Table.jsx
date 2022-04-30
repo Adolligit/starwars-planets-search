@@ -3,13 +3,32 @@ import Context from '../context/Context';
 
 function Table() {
   const [headers, setHeaders] = useState([]);
-  const { data } = useContext(Context);
+  const { data, filterByName } = useContext(Context);
 
   useEffect(() => {
     if (data) {
       setHeaders(Object.keys(data.results[0]));
     }
   }, [data]);
+
+  function listPlanets() {
+    const filteredPlanets = data.results.filter(({ name }) => (
+      name.toLowerCase().includes(
+        filterByName.name.toLowerCase(),
+      )
+    ));
+
+    return filteredPlanets.map((planet) => (
+      <tr key={ planet.name }>
+        {
+          Object.values(planet)
+            .map((dataField) => (
+              <td key={ dataField }>{ dataField }</td>
+            ))
+        }
+      </tr>
+    ));
+  }
 
   return (
     <table>
@@ -23,16 +42,7 @@ function Table() {
       <tbody>
         {
           (data)
-            ? (data.results.map((planet) => (
-              <tr key={ planet.name }>
-                {
-                  Object.values(planet)
-                    .map((e) => (
-                      <td key={ e }>{ e }</td>
-                    ))
-                }
-              </tr>
-            )))
+            ? listPlanets()
             : <tr>{}</tr>
         }
       </tbody>
