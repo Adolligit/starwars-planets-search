@@ -17,10 +17,11 @@ function FilterMenu() {
   const [numberField, setNumberField] = useState(0);
 
   const {
+    listPlanets,
     setFunctions: {
+      setListPlanets,
       setFilterByName,
       setfilterByNumericValues,
-      setNumericFilterApplied,
     },
   } = useContext(Context);
 
@@ -43,6 +44,16 @@ function FilterMenu() {
         }
       </select>
     );
+  }
+
+  function submitFilterNumeric() {
+    const filter = listPlanets.filter((planet) => {
+      if (comparison.includes('maior')) return +planet[column] > +numberField;
+      if (comparison.includes('igual')) return +planet[column] === +numberField;
+      return +planet[column] < +numberField;
+    });
+
+    setListPlanets(filter);
   }
 
   return (
@@ -73,7 +84,7 @@ function FilterMenu() {
       <button
         type="button"
         data-testid="button-filter"
-        onClick={ () => setNumericFilterApplied(true) }
+        onClick={ () => submitFilterNumeric() }
       >
         Aplicar filtro
       </button>

@@ -4,7 +4,8 @@ import Context from './Context';
 import { apiWithoutResidents } from '../api/getInfoPlanets';
 
 function Provider({ children }) {
-  const [data, setData] = useState('');
+  const [listPlanets, setListPlanets] = useState([]);
+  const [data, setData] = useState({ results: [{ name: '' }] });
   const [filterByName, setFilterByName] = useState({ name: '' });
 
   const [numericFilterApplied, setNumericFilterApplied] = useState(false);
@@ -16,10 +17,12 @@ function Provider({ children }) {
 
   const providerValue = {
     data,
+    listPlanets,
     filterByName,
     filterByNumericValues,
     numericFilterApplied,
     setFunctions: {
+      setListPlanets,
       setData,
       setFilterByName,
       setNumericFilterApplied,
@@ -30,6 +33,8 @@ function Provider({ children }) {
   useEffect(() => {
     apiWithoutResidents().then((json) => setData(json));
   }, []);
+
+  useEffect(() => setListPlanets(data.results), [data]);
 
   return (
     <Context.Provider value={ providerValue }>
