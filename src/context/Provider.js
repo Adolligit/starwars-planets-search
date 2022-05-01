@@ -7,14 +7,32 @@ function Provider({ children }) {
   const [data, setData] = useState('');
   const [filterByName, setFilterByName] = useState({ name: '' });
 
-  const setFunctions = { setData, setFilterByName };
+  const [numericFilterApplied, setNumericFilterApplied] = useState(false);
+  const [filterByNumericValues, setfilterByNumericValues] = useState([{
+    column: '',
+    comparison: '',
+    value: '',
+  }]);
+
+  const providerValue = {
+    data,
+    filterByName,
+    filterByNumericValues,
+    numericFilterApplied,
+    setFunctions: {
+      setData,
+      setFilterByName,
+      setNumericFilterApplied,
+      setfilterByNumericValues,
+    },
+  };
 
   useEffect(() => {
     apiWithoutResidents().then((json) => setData(json));
   }, []);
 
   return (
-    <Context.Provider value={ { data, filterByName, setFunctions } }>
+    <Context.Provider value={ providerValue }>
       {children}
     </Context.Provider>
   );
