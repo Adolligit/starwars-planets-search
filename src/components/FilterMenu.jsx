@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Context from '../context/Context';
 
-const listFilter = {
+const listBox = {
   column: [
     'population',
     'orbital_period',
@@ -12,9 +12,10 @@ const listFilter = {
 };
 
 function FilterMenu() {
-  const [column, setColumn] = useState(listFilter.column[0]);
-  const [comparison, setComparison] = useState(listFilter.comparison[0]);
+  const [column, setColumn] = useState(listBox.column[0]);
+  const [comparison, setComparison] = useState(listBox.comparison[0]);
   const [numberField, setNumberField] = useState(0);
+  const [listColumns, setListColumns] = useState(listBox.column);
 
   const {
     listPlanets,
@@ -24,9 +25,6 @@ function FilterMenu() {
       setfilterByNumericValues,
     },
   } = useContext(Context);
-
-  useEffect(() => setfilterByNumericValues([{ column, comparison, value: numberField }]),
-    [column, comparison, numberField, setfilterByNumericValues]);
 
   function createListBox(name, arrValues, setFunction) {
     return (
@@ -53,7 +51,13 @@ function FilterMenu() {
       return +planet[column] < +numberField;
     });
 
+    setfilterByNumericValues((state) => (
+      [...state, { column, comparison, value: numberField }]
+    ));
+
     setListPlanets(filter);
+
+    setListColumns(listColumns.filter((columnInList) => columnInList !== column));
   }
 
   return (
@@ -70,11 +74,8 @@ function FilterMenu() {
           onChange={ ({ target: { value } }) => setFilterByName({ name: value }) }
         />
       </label>
-      {
-        Object.keys(listFilter).map((key, index) => (
-          createListBox(key, listFilter[key], (!index) ? setColumn : setComparison)
-        ))
-      }
+      { createListBox('column', listColumns, setColumn) }
+      { createListBox('comparison', listBox.comparison, setComparison) }
       <input
         type="number"
         data-testid="value-filter"
@@ -82,7 +83,7 @@ function FilterMenu() {
         onChange={ ({ target: { value } }) => setNumberField(value) }
       />
       <button
-        type="button"
+        type="submit"
         data-testid="button-filter"
         onClick={ () => submitFilterNumeric() }
       >

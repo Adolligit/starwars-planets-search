@@ -7,25 +7,17 @@ function Provider({ children }) {
   const [listPlanets, setListPlanets] = useState([]);
   const [data, setData] = useState({ results: [{ name: '' }] });
   const [filterByName, setFilterByName] = useState({ name: '' });
-
-  const [numericFilterApplied, setNumericFilterApplied] = useState(false);
-  const [filterByNumericValues, setfilterByNumericValues] = useState([{
-    column: '',
-    comparison: '',
-    value: '',
-  }]);
+  const [filterByNumericValues, setfilterByNumericValues] = useState([]);
 
   const providerValue = {
     data,
     listPlanets,
     filterByName,
     filterByNumericValues,
-    numericFilterApplied,
     setFunctions: {
       setListPlanets,
       setData,
       setFilterByName,
-      setNumericFilterApplied,
       setfilterByNumericValues,
     },
   };
